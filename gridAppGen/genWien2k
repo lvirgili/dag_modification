@@ -1,0 +1,48 @@
+#!/bin/sh
+################################################################################
+# Description: Creates a $1 level 2 width Wien2k DAG adjacency matrix file.
+#  
+# Execution Example: ./genWien2k 4 > wien2k04.dat
+#
+# Additional tools: ./dag2app wien2k04.dag 45 53 10 4 5 > wien2k04.dat
+#                   ./app2dot wien2k04.dat > wien2k04_app.dot
+#                   
+#
+#  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+#  Data:  06/09/2010
+################################################################################
+
+if [ $# != 1 ]; then
+    echo "Usage: $0 Level2_width"
+    exit
+fi 
+
+n=$1
+
+echo | gawk '
+    END {
+        for (i=1; i<=n; i++) {
+            
+            # Level 1
+            D[0, i] = 1
+            D[i, n+1] = 1
+            
+            # Level 2
+            D[n+1, n+i+1] = 1
+            D[n+i+1, 2*n+2] = 1
+            
+            # Level 3
+            D[2*n+2, 2*n+i+2] = 1
+            D[2*n+i+2, 3*n+3] = 1
+        }
+
+        m = 3*n+3
+        
+        for (i=0; i<=m; i++) {
+            for (j=0; j<=m; j++) {
+                printf(" %d", D[i,j]);
+            }
+            printf("\n");
+        }      
+    }' n=$n
+

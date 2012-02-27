@@ -1,0 +1,55 @@
+#!/bin/bash
+################################################################################
+# Description: Creates a .dot DAG file based on a TVM Scheduler compatible
+#              application input file.
+#  
+# Execution Example: ./app2dot wien2k_6.dat > wien2k_6_app.dot
+#
+# Author: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+# Data:  14/07/2010
+################################################################################
+
+if [ $# != 1 ]; then
+    echo -e "\nUsage: $0 app_file"
+    echo -e "\nWhere: app_file: TVM scheduler compatible application file.\n"
+    exit
+fi 
+
+appFile=$1
+tmpFile=$(mktemp)
+
+n=$(head $appFile -n1 | cut -d' ' -f2)
+I=($(cat $appFile | grep "I: " | cut -d' ' -f4- | sed -e 's/\]//g'))
+S=($(cat $appFile | grep "S: " | cut -d' ' -f4- | sed -e 's/\]//g'))
+
+echo "digraph DAG {"
+
+# Prints task processing and software demands as a .dot node label
+for (( i = 0 ; i < $n; i++ )); do 
+    echo "    $i  [label=\"$i  [${I[$i]}, ${S[$i]}]\"]"
+done
+echo
+
+# Prints task dependancies with the amount of transmiting data as a .dot lable
+cat $appFile | gawk '
+    BEGIN{
+        flag=0
+    }
+    {
+        if($1=="B:") 
+            flag=1; 
+        if($1=="]") 
+            flag=0; 
+        if(flag==1) 
+            print
+    }' | sed -e 's/^.*)//g' |  gawk '
+    BEGIN{
+        row=0
+    }
+    {
+        for(column=1; column<=NF; column++) 
+            if(int($column)>0) 
+                printf("    %d -> %d    [ label = \"[%d]\" ]\n", row, column-1, $column); row++;
+    }'
+
+echo "}"

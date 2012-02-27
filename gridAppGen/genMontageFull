@@ -1,0 +1,46 @@
+#!/bin/sh
+################################################################################
+# Description: Creates all the files releated to a 
+#              $1 level 2 width Montage DAG adjacency matrix file
+#              in the dagRes subfolder.
+#  
+# Execution Example: ./fullMontage 4
+#
+# Additional tools: ./dag2app montage04.dag 45 53 10 4 5 > montage04.dat
+#                   ./app2dot montage04.dat > montage04_app.dot
+#                   
+#
+#  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+#  Data:  16/08/2010
+################################################################################
+
+if [ $# != 1 ] || [ $(echo $1%2 | bc) != 0 ]; then
+    echo -e "\nUsage: $0 Level2_width\n"
+    echo -e "Description: Generates dag, dat, and dot files of a Montage"
+    echo -e "             application DAG in a results subfolder.\n"
+    echo -e "Restriction: The Level2_width value has to be an even number.\n"
+    echo -e "Required files: * genMontage"
+    echo -e "                * dag2app"
+    echo -e "                * dag2dot\n"
+    exit
+fi 
+
+n=$1
+
+resultsDir="results"
+mkdir $resultsDir -p
+
+# Generates an adjacency matrix file of the Montage DAG
+./genMontage $n > $resultsDir/montage$n.dag
+
+# Creates a dot graph file based on the adjacency matrix
+./dag2dot $resultsDir/montage${n}.dag > $resultsDir/montage${n}.dot
+# Creates an eps imagefile based on the dot graph file
+dot -Teps -o $resultsDir/montage${n}.eps $resultsDir/montage${n}.dot
+
+# Creates a TVM scheduler compatible application file based on the adjacency matrix 
+./dag2app $resultsDir/montage${n}.dag 45 53 10 4 5 > $resultsDir/montage${n}_app.dat
+# Creates a dot graph file based on a TVM scheduler compatible application file
+./app2dot $resultsDir/montage${n}_app.dat > $resultsDir/montage${n}_app.dot
+# Creates an eps imagefile based on the dot graph file
+dot -Teps -o $resultsDir/montage${n}_app.eps $resultsDir/montage${n}_app.dot

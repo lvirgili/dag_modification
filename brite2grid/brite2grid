@@ -1,0 +1,118 @@
+#!/bin/bash
+################################################################################
+# Description: Receives a .brite network topology file and generates a
+#              grid input file compatible with the TVM schedulers.
+#  
+# Execution Example: ./brite2grid n10.brite 0.5 2 10 1024 > n10.dat
+#
+#  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+#  Data:  13/08/2010
+################################################################################
+
+if [ $# -lt 1 ]  || [ $# -gt 5 ]; then
+    echo
+    echo "Usage: $0 brite_file [min_ti max_ti [min_vmr_bw max_vmr_bw]]"
+    #echo "Usage: $0 BRITE_TOPOLOGY_FILE MIN_TI MAX_TI MIN_REP_BWD MAX_REP_BWD"
+    echo -e "\nWhere:"
+    echo -e "       brite_file : Network topology file generated with Brite.\n"
+    echo -e "       min_ti     : Minimum time a host can take to execute one instruction,"
+    echo -e "                    default value = 0.5 seconds.\n"
+    echo -e "       max_ti     : Maximum time a host can take to execute one instruction,"
+    echo -e "                    default value = 2 seconds.\n"    
+    echo -e "       min_vmr_bw : Minimum bandwith between a host and the vm repository,"  
+    echo -e "                    default value = 10 Mbps.\n"
+    echo -e "       max_vmr_bw : Maximum bandwith between a host and the vm repository,"      
+    echo -e "                    default value = 1024 Mbps.\n"
+    exit
+fi
+
+# Brite input file
+briteFile=$1
+ 
+# Min and Max limits of time that hosts take to process a single instruction
+if [ $# -gt 2 ]; then
+    minTI=$2
+    maxTI=$3
+else
+    minTI=0.5000
+    maxTI=2.0000
+fi
+
+# Min and Max bandwidth limits of links between host and the VM repository
+if [ $# -gt 4 ]; then
+    minRbw=$4
+    maxRbw=$5
+else
+    minRbw=10
+    maxRbw=1024
+fi
+
+# Number of nodes
+m=$(head -n1 $briteFile | cut -d' ' -f 3)
+
+
+cat $briteFile | gawk '
+    BEGIN {
+        srand();
+        flag=0;      
+    }
+    {
+        if (flag==1) TB[$2, $3] = 1/$6
+        
+        if ($1=="Edges:") flag=1
+    }
+    END {
+        # Prints the amount of hosts "m"
+        printf("m: %d\n",m)
+
+        # Prints Processing time of each host
+        printf("TI: [ (1)");
+        for(i=0;i<m;i++)
+    	    printf(" %f", (rand()*(maxTI-minTI)+minTI));
+        printf("]\n");
+
+        # Prints the amount of cores of each host
+        printf("C: [ (1)");
+        for(i=0;i<m;i++)
+    	    printf(" 1");
+        printf("]\n");
+
+        # Prints bandwidth of links between host
+        for (i=0;i<m;i++)
+        	for (j=0;j<m;j++) {
+        		if (i==0 && j==0)
+        			printf("TB: [ (%d 1) %.6lf",i,TB[i,j]);
+        		else {
+        			if (j==0)
+        				printf("\n      (%d 1) %.6lf",i,TB[i,j]);
+        			else
+        				printf(" %.6lf",TB[i,j]);
+        		}
+        	}
+        printf("\n   ]\n");
+
+        # Prints links between host
+        for (i=0;i<m;i++)
+        	for (j=0;j<m;j++) {
+        	
+                if (TB[i,j]==0 && i!=j) value=0
+        	    else value=1
+        	    
+        		if (i==0 && j==0)
+        			printf("N: [ (%d 1) %d",i,value);
+        		else {
+        			if (j==0)
+        				printf("\n     (%d 1) %d",i,value);
+        			else
+        				printf(" %d",value);
+        		}
+        	}
+        printf("\n   ]\n");
+
+        # Prints bandwidth of links between host and the VM repository
+        printf("TR: [ (1)");
+        for(i=0;i<m;i++)
+    	    printf(" %f", 1/(rand()*(maxRbw-minRbw)+minRbw));
+        printf("]\n");
+        
+    }' m=$m minTI=$minTI maxTI=$maxTI minRbw=$minRbw maxRbw=$maxRbw

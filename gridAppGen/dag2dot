@@ -1,0 +1,32 @@
+#!/bin/sh
+################################################################################
+# Description: Creates a .dot DAG file based on a DAG input file.
+#  
+# Execution Example: ./dag2dot wien2k_6.dag > wien2k_6_app.dot
+#
+# Author: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+# Date:  06/09/2010
+################################################################################
+
+if [ $# != 1 ]; then
+    echo -e "\nUsage: $0 dag_file"
+    exit
+fi 
+
+dagFile=$1
+tmpFile=$(mktemp)
+
+echo "digraph outGraph {"
+
+# Prints task dependancies
+cat $dagFile | gawk '
+    BEGIN{
+        row=0
+    }
+    {
+        for(column=1; column<=NF; column++) 
+            if(int($column)>0) 
+                printf("    %d -> %d;\n", row, column-1, $column); row++;
+    }'
+
+echo "}"

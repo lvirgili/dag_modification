@@ -1,0 +1,45 @@
+#!/bin/sh
+################################################################################
+# Description: Creates all the files releated to a 
+#              $1 level 2 width Simple DAG adjacency matrix file
+#              in the $resultsDir subfolder.
+#  
+# Execution Example: ./genSimplefull 4
+#
+# Additional tools: ./dag2app simple04.dag 45 53 10 4 5 > simple04.dat
+#                   ./app2dot simple04.dat > simple04_app.dot
+#                   
+#
+#  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+#  Data:  06/09/2010
+################################################################################
+
+if [ $# != 1 ]; then
+    echo -e "\nUsage: $0 Level2_width\n"
+    echo -e "Description: Generates dag, dat, and dot files of a Simple"
+    echo -e "             application DAG in a results subfolder.\n"
+    echo -e "Required files: * genSimple"
+    echo -e "                * dag2app"
+    echo -e "                * dag2dot\n"
+    exit
+fi 
+
+n=$1
+
+resultsDir="results"
+mkdir $resultsDir -p
+
+# Generates an adjacency matrix file of the Simple DAG
+./genSimple $n > $resultsDir/simple$n.dag
+
+# Creates a dot graph file based on the adjacency matrix
+./dag2dot $resultsDir/simple${n}.dag > $resultsDir/simple${n}.dot
+# Creates an eps imagefile based on the dot graph file
+dot -Teps -o $resultsDir/simple${n}.eps $resultsDir/simple${n}.dot
+
+# Creates a TVM scheduler compatible application file based on the adjacency matrix 
+./dag2app $resultsDir/simple${n}.dag 45 53 10 4 5 > $resultsDir/simple${n}_app.dat
+# Creates a dot graph file based on a TVM scheduler compatible application file
+./app2dot $resultsDir/simple${n}_app.dat > $resultsDir/simple${n}_app.dot
+# Creates an eps imagefile based on the dot graph file
+dot -Teps -o $resultsDir/simple${n}_app.eps $resultsDir/simple${n}_app.dot

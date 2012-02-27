@@ -1,0 +1,45 @@
+#!/bin/sh
+################################################################################
+# Description: Creates all the files releated to a 
+#              $1 level 2 width Wien2k DAG adjacency matrix file
+#              in the $resultsDir subfolder.
+#  
+# Execution Example: ./genWien2kfull 4
+#
+# Additional tools: ./dag2app wien2k04.dag 45 53 10 4 5 > wien2k04.dat
+#                   ./app2dot wien2k04.dat > wien2k04_app.dot
+#                   
+#
+#  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+#  Data:  06/09/2010
+################################################################################
+
+if [ $# != 1 ]; then
+    echo -e "\nUsage: $0 Level2_width\n"
+    echo -e "Description: Generates dag, dat, and dot files of a Wien2k"
+    echo -e "             application DAG in a results subfolder.\n"
+    echo -e "Required files: * genWien2k"
+    echo -e "                * dag2app"
+    echo -e "                * dag2dot\n"
+    exit
+fi 
+
+n=$1
+
+resultsDir="results"
+mkdir $resultsDir -p
+
+# Generates an adjacency matrix file of the Wien2k DAG
+./genWien2k $n > $resultsDir/wien2k$n.dag
+
+# Creates a dot graph file based on the adjacency matrix
+./dag2dot $resultsDir/wien2k${n}.dag > $resultsDir/wien2k${n}.dot
+# Creates an eps imagefile based on the dot graph file
+dot -Teps -o $resultsDir/wien2k${n}.eps $resultsDir/wien2k${n}.dot
+
+# Creates a TVM scheduler compatible application file based on the adjacency matrix 
+./dag2app $resultsDir/wien2k${n}.dag 45 53 10 4 5 > $resultsDir/wien2k${n}_app.dat
+# Creates a dot graph file based on a TVM scheduler compatible application file
+./app2dot $resultsDir/wien2k${n}_app.dat > $resultsDir/wien2k${n}_app.dot
+# Creates an eps imagefile based on the dot graph file
+dot -Teps -o $resultsDir/wien2k${n}_app.eps $resultsDir/wien2k${n}_app.dot

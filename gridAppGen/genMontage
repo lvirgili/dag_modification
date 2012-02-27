@@ -1,0 +1,51 @@
+#!/bin/sh
+################################################################################
+# Description: Creates a $1 level 2 width Montage DAG adjacency matrix file.
+#  
+# Execution Example: ./genMontage 4 > montage04.dat
+#
+# Additional tools: ./dag2app montage04.dag 45 53 10 4 5 > montage04.dat
+#                   ./app2dot montage04.dat > montage04_app.dot
+#                   
+#
+#  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+#  Data:  16/08/2010
+################################################################################
+
+if [ $# != 1 ]; then
+    echo "Usage: $0 Level2_width"
+    exit
+fi 
+
+n=$1
+
+echo | gawk '
+    END {
+        A[5*n-1,5*n] = 1
+
+        for (i=1; i<=n; i++) {
+            A[0,i] = 1;
+
+            A[i,n+i] = 1;
+            A[i,2*n+i-1] = 1;
+            A[i,5*n+i] = 1;
+
+            A[5*n,5*n+i] = 1;
+            A[5*n+i,6*n+1] = 1;
+        }
+
+        m=2*n-1;
+        for (i=1; i<=m; i++) {
+            A[n+i,3*n+i-1] = 1;
+            A[3*n+i-1,5*n-1] = 1;
+        }
+
+        m=6*n+1;
+        for (i=0; i<=m; i++) {
+            for (j=0; j<=m; j++) {
+                printf(" %d", A[i,j]);
+            }
+            printf("\n");
+        }      
+    }' n=$n
+

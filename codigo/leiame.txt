@@ -1,0 +1,12 @@
+para compilar é só dar "make" mesmo. Enquanto para executar, o TVM-IN e o
+TVM-RR são executados só mudando um parâmetro, respectivamente:
+
+./tvms 0 int 20 ../cenarios_icc/applications/old/montage02.dat
+../cenarios_icc/grid/hosts/old/n20.dat ../cenarios_icc/vms/old/vpr_10.dat
+
+./tvms 0 rr 20 ../cenarios_icc/applications/old/montage02.dat
+../cenarios_icc/grid/hosts/old/n20.dat ../cenarios_icc/vms/old/vpr_10.dat
+
+os cenários que eu usei para os papers do Latincom e do Globecom contem as
+grades geradas com o método de doar lesly, em anexo.
+

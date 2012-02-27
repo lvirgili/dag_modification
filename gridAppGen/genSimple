@@ -1,0 +1,36 @@
+#!/bin/sh
+################################################################################
+# Description: Creates a $1 level 2 width Simple DAG adjacency matrix file.
+#  
+# Execution Example: ./genSimple 4 > simple04.dat
+#
+# Additional tools: ./dag2app simple04.dag 45 53 10 4 5 > simple04.dat
+#                   ./app2dot simple04.dat > simple04_app.dot
+#                   
+#
+#  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
+#  Data:  06/09/2010
+################################################################################
+
+if [ $# != 1 ]; then
+    echo "Usage: $0 Level2_width"
+    exit
+fi 
+
+n=$1
+
+echo | gawk '
+    END {
+        for (i=1; i<=n; i++) {
+            D[0, i] = 1
+            D[i, n+1] = 1
+        }
+
+        for (i=0; i<=n+1; i++) {
+            for (j=0; j<=n+1; j++) {
+                printf(" %d", D[i,j]);
+            }
+            printf("\n");
+        }      
+    }' n=$n
+
