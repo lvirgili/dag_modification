@@ -1,0 +1,5 @@
+* sched_modification
+
+  This is my graduation project. The objective is to implement the
+  algorithm present in "Embedding Software Requirements in Grid
+  Schedulling" by Batista, Chaves and Fonseca.
