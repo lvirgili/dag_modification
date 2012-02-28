@@ -8,7 +8,7 @@
  *  Data:  17/11/2009
  */
 
-// ./tvms 0 int 20 ../cenarios_icc/applications/montage02.dat ../cenarios_icc/grid/hosts/n20.dat ../cenarios_icc/vpr_10.dat
+// ./tvms 0 int 20  ../cenarios_icc/applications/montage02.dat ../cenarios_icc/grid/hosts/n20.dat ../cenarios_icc/vpr_10.dat
 
 #include <stdio.h>
 #include <stdlib.h>

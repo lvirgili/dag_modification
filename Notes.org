@@ -25,6 +25,8 @@
       it. Have to find out which method in the article is used in
       function one.
 *** I/O
+    - x_dag.c, lines 348-50 print the graph in a file.
+    - add fileName to x_io.h and read it from cl.
 
 
 *** Find out what timeUnit does.

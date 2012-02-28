@@ -9,6 +9,9 @@
 
 int timeUnit;
 
+/* Where to print the results */
+char fileName[50];
+
 /* Execution duration */
 time_t start_t, end_t;
 double progExec_t;
