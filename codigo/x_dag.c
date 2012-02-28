@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
      time(&start_t);
      timeUnit = 1;
      /* Reading the input file or files */
-     if (argc == 5) {
+     if (argc == 6) {
           if(readInputFile(argv[4])) {
                return(2);
           }
@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
                //calcTmax();
                //printf("\nTmax: %.4lf\n\n", TmaxReal);
           }
+          strcpy(fileName, argv[5]);
      }
      else if (argc == 8) {
           if(readInputFiles(argv[4], argv[5], argv[6])) {
