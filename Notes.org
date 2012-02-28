@@ -6,7 +6,6 @@
     3. x_relax.c
     4. x_list.c
     5. tvms.c
-
 *** First things first: main, the beginning.
     - It is in the 'tvms.c' file.
     - The first integer passed as a parameter (argv[1]) can be:
@@ -19,8 +18,13 @@
       examples I have only "int" is passed in argv[2], so I shall
       ignore this possibilities for now.
     - Then it reads the files passed. In the example given it reads
-      all three files with the "readInputFiles".
+      all three files with the "readInputFiles". goto: I/O;
+*** x_dag.c
+    - The functions mdfDagOpc1 and mdfDagOpc2 modify the digraphs. The
+      second one generates all the possible ones, so I will not use
+      it. Have to find out which method in the article is used in
+      function one.
 *** I/O
-    - Clearly done by x_io.c
+
 
 *** Find out what timeUnit does.
