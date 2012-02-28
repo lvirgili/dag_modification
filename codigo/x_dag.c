@@ -353,7 +353,6 @@ void calcSetsCartProd() {
           strcpy(aux_name, fileName);
           sprintf(file_name,"/zz%06d.dat",++cont);
           strcat(aux_name, file_name);
-          printf("%s\n", aux_name);
           printApp2File(aux_name);
 
           free(I);
