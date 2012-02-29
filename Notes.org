@@ -7,18 +7,7 @@
     4. x_list.c
     5. tvms.c
 *** First things first: main, the beginning.
-    - It is in the 'tvms.c' file.
-    - The first integer passed as a parameter (argv[1]) can be:
-      + 0: BCL
-      + 1: OPTMIZER
-    - Then it ignores argv[2].
-    - argv[3] is read into timeUnit.
-    - After this it compares argv[2] with "dint" and "drr" to consider
-      if only the 4 first contraints should be considered. In the
-      examples I have only "int" is passed in argv[2], so I shall
-      ignore this possibilities for now.
-    - Then it reads the files passed. In the example given it reads
-      all three files with the "readInputFiles". goto: I/O;
+    - It is in the 'x_dag.c' file.
 *** x_dag.c
     - The functions mdfDagOpc1 and mdfDagOpc2 modify the digraphs. The
       second one generates all the possible ones, so I will not use
@@ -28,5 +17,4 @@
     - x_dag.c, lines 348-50 print the graph in a file.
     - add fileName to x_io.h and read it from cl.
 
-
-*** Find out what timeUnit does.
+*** TODO Implement functions to print the matricse

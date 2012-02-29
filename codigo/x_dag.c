@@ -24,7 +24,7 @@ int main(int argc, char **argv) {
                //calcTmax();
                //printf("\nTmax: %.4lf\n\n", TmaxReal);
           }
-          strcpy(fileName, argv[5]);
+          strcpy(pathName, argv[5]);
      }
      else if (argc == 8) {
           if(readInputFiles(argv[4], argv[5], argv[6])) {
@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
                //printf("\nTmax: %f\n\n", TmaxReal);
           }
           /* Read output path */
-          strcpy(fileName, argv[7]);
+          strcpy(pathName, argv[7]);
      }
 
      //printApp();
@@ -350,7 +350,7 @@ void calcSetsCartProd() {
           //printApp();
           char aux_name[50], file_name[50];
           strcpy(file_name, "");
-          strcpy(aux_name, fileName);
+          strcpy(aux_name, pathName);
           sprintf(file_name,"/zz%06d.dat",++cont);
           strcat(aux_name, file_name);
           printApp2File(aux_name);

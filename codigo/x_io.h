@@ -10,7 +10,7 @@
 int timeUnit;
 
 /* Where to print the results */
-char fileName[50];
+char pathName[50];
 
 /* Execution duration */
 time_t start_t, end_t;
