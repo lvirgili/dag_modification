@@ -50,6 +50,8 @@ void calcTmax(void);
 void calcTmaxOld(void);
 void printVars(void);
 void printApp(void);
+void printTaskInfo(void);
+void printVMInfo(void);
 void printApp2File(char * fileName);
 int myrand (int min, int max);
 void freeVars(void);

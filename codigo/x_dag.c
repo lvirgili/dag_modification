@@ -44,6 +44,8 @@ int main(int argc, char **argv) {
      //printApp();
      mdfDagOpc2();
      //printApp();
+     printTaskInfo();
+     printf("---------\n");
 
 }
 

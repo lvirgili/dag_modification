@@ -719,6 +719,48 @@ void printVars(void) {
      printf("\n**********************************************************\n\n");
 }
 
+void printTaskInfo(void) {
+     int i, j;
+
+     printf("%d\n", n);
+     //Processing demand of tasks (Number of instructions)
+     for (i=0;i<n;i++) {
+          printf("I[%d] = %lf\n",i,I[i]);
+     }
+     printf("\n");
+
+     //Software demand of tasks (VM's ID)
+     for (i=0;i<n;i++) {
+          printf("S[%d] = %d\n",i,S[i]);
+     }
+     printf("\n");
+
+     //Number of byte transmitted between tasks
+     for (i=0;i<n;i++) {
+          for(j=0;j<n;j++) {
+               printf("B[%d,%d] = %lf ",i,j,B[i][j]);
+          }
+          printf("\n");
+     }
+
+     //Set of arcs between tasks
+     /* for (i=0;i<n;i++) { */
+     /*      for(j=0;j<n;j++) { */
+     /*           printf("D[%d,%d] = %d ",i,j,D[i][j]); */
+     /*      } */
+     /*      printf("\n"); */
+     /* } */
+}
+
+void printVMInfo(void) {
+     int i;
+     //Software ofering of virtual Machines
+     for (i=0;i<o;i++) {
+          printf("SV[%d] = %d ",i,SV[i]);
+     }
+     printf("\n");
+}
+
 void printApp(void) {
      int i, j;
      printf("n: %d\n",n);
