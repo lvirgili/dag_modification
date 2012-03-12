@@ -1,4 +1,5 @@
 *.tar.gz
 *.o
-codigo-dagmdf
+dagmdf
+test
 *.sh
