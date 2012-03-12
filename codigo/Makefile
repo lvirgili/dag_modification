@@ -20,4 +20,4 @@ test: $(TEST)
 	$(CC) $(CFLAGS) $(CFLAGS2) -c $<
 
 clean:
-	-rm -f $(OBJS1) $(OBJS2) $(PROGRAM1) $(TEST) *~
+	-rm -f $(OBJS1) $(OBJS2) $(PROGRAM1) $(TPROG) *~
