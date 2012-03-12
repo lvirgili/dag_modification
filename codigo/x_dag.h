@@ -43,4 +43,5 @@ void storeSet(int partition); /* Prints the groups of tasks */
 void calcSetsCartProd(); /* Calculates the Cartesian Product of the VM partition sets */
 void createDAG(int * setsxVMi); /* Creates a new DAG with for a given Cartesian Product result */
 void printData();
+
 #endif

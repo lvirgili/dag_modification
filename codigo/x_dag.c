@@ -6,6 +6,11 @@
 #include "x_io.h"
 #include "x_dag.h"
 
+#define WHERESTR  "[file %s, line %d]: "
+#define WHEREARG  __FILE__, __LINE__
+#define DEBUGPRINT2(...)       fprintf(stdout, __VA_ARGS__)
+#define deb(_fmt, ...)  DEBUGPRINT2(WHERESTR _fmt, WHEREARG, __VA_ARGS__)
+
 int main(int argc, char **argv) {
 
      infinite=999999;
@@ -40,13 +45,11 @@ int main(int argc, char **argv) {
           /* Read output path */
           strcpy(pathName, argv[7]);
      }
-
+     printf("before\n");
      //printApp();
      mdfDagOpc2();
      //printApp();
-     printTaskInfo();
-     printf("---------\n");
-
+     printf("after\n");
 }
 
 int mdfDagOpc1() {
@@ -69,7 +72,7 @@ int mdfDagOpc1() {
      while (++i < n1)
           I1[i] = I[i-n-1];
 
-    
+
      /* Allocating memory space for matrix 'B1' */
      B1 = (double **)malloc(n1*sizeof(double *));
      if (!B1) {
@@ -178,10 +181,13 @@ int mdfDagOpc1() {
 int mdfDagOpc2() {
      int i, j;
 
+     deb("%s\n", "deb, start");
+
      tasksxVMa = (int *) malloc(o*sizeof(int));
      setsxVMa  = (int *) malloc(o*sizeof(int));
      instxVMa  = (int **)malloc(o*sizeof(int *));
 
+     deb("%s\n", "deb, allocation");
      /* Initializes the tasksxVM and setsxVMa vectors */
      for (i=0; i<o; i++) {
           tasksxVMa[i] = 0;
@@ -202,6 +208,8 @@ int mdfDagOpc2() {
                tasksxVMa[i] = 0;
           }
 
+     deb("%s\n", "deb, allocation of TasksxVM");
+
      /* Fills the TasksxVM matrix */
      for (i=0; i<n; i++)
           tasksxVM[ S[i]-1 ] [tasksxVMa[ S[i]-1 ]++] = i;
@@ -209,9 +217,10 @@ int mdfDagOpc2() {
      /* Allocates memory for the VM dimension of the setsxVM 3D matrix */
      setsxVM = (int ***)malloc(o*sizeof(int **));
      if (!setsxVM) {
-          fprintf(stderr,"Error allocating memory [setsxMV] :'(.\n");
+          fprintf(stderr,"Error allocating memory [setsxVM] :'(.\n");
           return(2);
      }
+     deb("%s\n", "deb, allocation of setsxVM");
      /* Allocates memory for the othr two dimensions of the setsxVM 3D matrix
       * and stores values
       */
@@ -226,6 +235,7 @@ int mdfDagOpc2() {
                //printf("\t      # Sets: %d\n", setsxVMa[i]);
           }
      }
+     deb("%s\n", "deb, allocation SP");
 
      n1=n;
      I1=I;
@@ -239,6 +249,8 @@ int mdfDagOpc2() {
   scanf("%c", &ans);
   if (ans=='y')
 */
+
+     deb("%s\n", "deb, before calcSets...");
      calcSetsCartProd();
 
 
@@ -276,6 +288,7 @@ int mdfDagOpc2() {
  */
 void SP(int m, int p, int idPart, int n) {
      int i;
+     deb("%s\n", "deb, SP start");
      if (p < n) {
           for (i=1; i<=m; i++) {
                c[p]=i;
@@ -284,15 +297,18 @@ void SP(int m, int p, int idPart, int n) {
           c[p]=m+1;
           SP(m+1, p+1, idPart, n);
      }
-     else if (p==n)
+     else if (p==n) {
           for (i=1;i<=m+1;i++) {
                c[p]=i;
                storeSet(idPart);
           }
+     }
 }
 
 void storeSet(int partition) {
      int i;
+
+     deb("%s\n", "deb, storeSet start");
 
      idSet++;
      instxVMa[partition] = (int *) realloc( instxVMa[partition], (idSet+1)*sizeof(int) );
@@ -303,18 +319,19 @@ void storeSet(int partition) {
 
      /* Allocates memory for a new task partition set of the setsxVM 3D matrix */
      setsxVM[partition] = (int **) realloc( setsxVM[partition], (idSet+1)*sizeof(int *) );
+     deb("%s\n", "deb, storeSet realloc");
      setsxVM[partition][idSet] = (int *) malloc(tasksxVMa[partition]*sizeof(int));
-    
+
 //    printf("%d\t    ", partition);
      for (i=0;i<tasksxVMa[partition];i++) {
 //        printf(" %2d",c[i+1]);
 
           setsxVM[partition][idSet][i] = c[i+1];
-                
+
           if (instxVMa[partition][idSet] < c[i+1])
                instxVMa[partition][idSet] = c[i+1];
      }
-    
+
 //    printf(" -- %2d instantiations\n", instxVMa[partition]);
 }
 
@@ -336,12 +353,12 @@ void calcSetsCartProd() {
           else
                setsxVMi[i]=minVal;
 
-//	printf("\n\n------------------------------\n");
+//      printf("\n\n------------------------------\n");
      int cont=0;
 
      while(setsxVMi[0]<setsxVMa[0]) {
 
-//		printf("%d -- ", ++cont);
+//              printf("%d -- ", ++cont);
 
           digit = o-1;
           increment = 1;
@@ -387,15 +404,15 @@ void createDAG(int * setsxVMi) {
 
      instCurSet=0;
      for (v=0; v<o; v++) {
-//		printf("VM%d{", v);
+//              printf("VM%d{", v);
           for (i=0;i<tasksxVMa[v];i++)
-//		    printf(" %d:%d ",setsxVM[v][setsxVMi[v]][i]+instCurSet,tasksxVM[v][i]);
-//		printf("}; ");
+//                  printf(" %d:%d ",setsxVM[v][setsxVMi[v]][i]+instCurSet,tasksxVM[v][i]);
+//              printf("}; ");
 
                if (setsxVMi[v] >= 0)
                     instCurSet += instxVMa[v][setsxVMi[v]];
      }
-//	printf("\n");
+//      printf("\n");
      n = n1 + instCurSet + 1;
 
 
@@ -414,8 +431,8 @@ void createDAG(int * setsxVMi) {
           //return(2);
           exit(0);
      }
-     /***************************	
-	 Filling values of vector 'I'
+     /***************************       
+         Filling values of vector 'I'
      ****************************/
      i=0;
      I[i] = 0;
@@ -440,14 +457,14 @@ void createDAG(int * setsxVMi) {
                //return(2);
           }
      }
-	
-     /***************************	
-	 Filling values of array 'B'
+        
+     /***************************       
+         Filling values of array 'B'
      ****************************/
      for (j=0; j<n; j++)
           for (i=0; i<n; i++)
                B[j][i]=0;
-	
+        
      /* First line (MV Repository)*/
      i=0;
      for (v=0; v<o; v++)
@@ -478,7 +495,7 @@ void createDAG(int * setsxVMi) {
                i++;
           }
      }
-	
+        
      /**********************************************
      Allocates memory space for the new 'D' matrix
      **********************************************/
@@ -494,16 +511,16 @@ void createDAG(int * setsxVMi) {
                //return(2);
           }
      }
-	
-     /***************************	
-	 Filling values of array 'B'
+        
+     /***************************       
+         Filling values of array 'B'
      ****************************/
      for (j=0; j<n; j++)
           for (i=0; i<n; i++)
                if(B[j][i] == 0)
-	            D[j][i] = 0;
+                    D[j][i] = 0;
                else
-	            D[j][i] = 1;
+                    D[j][i] = 1;
 }
 
 void printData() {

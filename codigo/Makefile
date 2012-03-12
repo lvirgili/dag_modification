@@ -7,12 +7,17 @@ LIBSMATH = -lm
 
 OBJS1=x_io.o x_dag.o
 PROGRAM1=dagmdf
+TEST=test.c graph.o
+TPROG=test
 
 dagmdf: $(OBJS1)
 	$(CC) $(CFLAGS) $(OBJS1) -o $(PROGRAM1) $(LIBSMATH)
+
+test: $(TEST)
+	$(CC) $(CFLAGS) $(TEST) -o $(TPROG)
 
 %.o: %.c
 	$(CC) $(CFLAGS) $(CFLAGS2) -c $<
 
 clean:
-	-rm -f $(OBJS1) $(OBJS2) $(PROGRAM1) *~
+	-rm -f $(OBJS1) $(OBJS2) $(PROGRAM1) $(TEST) *~
