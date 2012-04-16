@@ -62,7 +62,7 @@ static void gen_paths(int **G, int ntasks) {
 }
 
 void mdfDagOpc3(int **G, int *S, double *TV, int ntasks, int nvm) {
-     int **mdfG, i, j;
+     int **mdfG, i, j, s, task;
      int **Ph;
      double *new_I;
      gen_paths(G, ntasks);
@@ -74,12 +74,23 @@ void mdfDagOpc3(int **G, int *S, double *TV, int ntasks, int nvm) {
      /* Ph[pathid+mv][x] == 1 if the task x in the set P_{pathid,mv} */
      Ph = (int **)malloc((pathid*nvm) * sizeof(int *));
      for (i = 0; i < pathid*nvm; ++i) {
-          Ph[i] = malloc(ntasks * sizeof(int));
+          Ph[i] = calloc(ntasks, sizeof(int));
+     }
+     for (i = 0; i < pathid; ++i) {
+          for (j = 0; j < ntasks; ++j) {
+               task = paths[i][j];
+               s = S[task];
+               Ph[i+i+s][task] = 1;
+               if (paths[i][j] == ntasks-1) {
+                    break;
+               }
+          }
      }
      for (i = 0; i < pathid*nvm; ++i) {
           for (j = 0; j < ntasks; ++j) {
-               Ph[i][j] = 0;
+               printf("%d ", Ph[i][j]);
           }
+          printf("\n");
      }
      new_I = (double *)malloc(sizeof(double));
 
