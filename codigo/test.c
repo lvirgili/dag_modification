@@ -1,10 +1,16 @@
 #include "graph.h"
 
 int main() {
-     int **G, n, i, j;
-     n = 6;
+     int **G, *S, n, i, j, nvm;
+     double *TV, *I;
+     n = 5;
+     nvm = 2;
      G = (int **)malloc(n * sizeof(int *));
+     S = (int *)malloc(n * sizeof(int));
+     I = (double *)malloc(n * sizeof(double));
+     TV = (double *)malloc(nvm * sizeof(double));
      for (i = 0; i < n; ++i) {
+          I[i] = 0;
           G[i] = (int *)malloc(n * sizeof(int));
      }
 
@@ -13,34 +19,27 @@ int main() {
                G[i][j] = 0;
           }
      }
-     G[0][1] = 1; G[0][4] = 1;
-     G[2][0] = 1; G[2][3] = 1; G[2][4] = 1;
-     G[3][4] = 1; G[3][5] = 1;
-     G[4][1] = 1; G[4][5] = 1;
-     G[5][1] = 1;
+     G[0][1] = 2; G[0][2] = 3; G[0][3] = 1;
+     G[1][4] = 5;
+     G[2][4] = 7;
+     G[3][4] = 2;
 
-     /* G[2][1] = 1; G[2][4] = 1; */
-     /* G[4][0] = 1; G[4][3] = 1; */
+     S[0] = 0; S[1] = 0; S[2] = 1;
+     S[3] = 1; S[4] = 1;
 
+     TV[0] = 12.3; TV[1] = 15.3;
+
+
+     mdfDagOpc3(G, S, TV, n, nvm);
+
+     free(S); free(TV); free(path_weight); free(I);
      for (i = 0; i < n; ++i) {
-          for (j = 0; j < n; ++j) {
-               printf("%d ", G[i][j]);
-          }
-          printf("\n");
+          free(G[i]);
      }
-     printf("\n");
-     gen_paths(G, n);
-     for (i = 0; i < n; ++i) {
-          printf("%d ", topological_order[i]);
+     free(G);
+     for (i = 0; i < n*n; ++i) {
+          free(paths[i]);
      }
-     printf("\n\n");
-
-     for (i = 0; i < pathid; ++i) {
-          for (j = 0; j < n; ++j) {
-               printf("%2d ", paths[i][j]);
-               if (paths[i][j] == topological_order[n-1]) break;
-          }
-          printf("\n");
-     }
+     free(paths);
      return 0;
 }

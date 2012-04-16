@@ -5,12 +5,11 @@
 #include <stdlib.h>
 
 int **paths;
-int *topological_order, *label;
-int count, pathid;
+int *path_weight;
+int pathid;
 
-static void ts(int **G, int ntasks, int v);
-static void gen_ts(int **G, int ntasks);
-static void find_path(int **G, int ntasks, int vertex, int pos, int *curr);
-void gen_paths(int **G, int ntasks);
+void ts(int **G, int ntasks, int v);
+void gen_ts(int **G, int ntasks);
+void mdfDagOpc3(int **G, int *S, double *TV, int ntasks, int nvm);
 
 #endif
