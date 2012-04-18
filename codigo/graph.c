@@ -1,4 +1,17 @@
 #include "graph.h"
+static void calculate_weights(int **G, int ntasks) {
+     int i, j;
+     path_weight = (int *)malloc(sizeof(int) * (ntasks * pathid));
+     for (i = 0; i < pathid; ++i) {
+          path_weight[i] = 0;
+          for (j = 0; j < ntasks; ++j) {
+               path_weight[i] += G[paths[i][j]][paths[i][j+1]];
+               if (paths[i][j+1] == ntasks-1) {
+                    break;
+               }
+          }
+     }
+}
 
 static void find_path(int **G, int ntasks, int vertex, int pos, int *curr) {
      int i, flag = 0;
@@ -15,20 +28,6 @@ static void find_path(int **G, int ntasks, int vertex, int pos, int *curr) {
                paths[pathid][i] = curr[i];
           }
           ++pathid;
-     }
-}
-
-static void calculate_weights(int **G, int ntasks) {
-     int i, j;
-     path_weight = (int *)malloc(sizeof(int) * (ntasks * pathid));
-     for (i = 0; i < pathid; ++i) {
-          path_weight[i] = 0;
-          for (j = 0; j < ntasks; ++j) {
-               path_weight[i] += G[paths[i][j]][paths[i][j+1]];
-               if (paths[i][j+1] == ntasks-1) {
-                    break;
-               }
-          }
      }
 }
 
