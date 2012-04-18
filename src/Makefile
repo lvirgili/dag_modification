@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++0x -Wall
+FLAGS = -std=c++0x -Wall -Wfatal-errors
 LMATH = -lm
 
 OBJS = dag.o main.o

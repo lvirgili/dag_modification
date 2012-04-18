@@ -1,10 +1,10 @@
 #include "dag.hpp"
 
-int app_dag::ntasks() {
+int app_dag::ntasks() const {
      return _ntasks;
 }
 
-int app_dag::nvm() {
+int app_dag::nvm() const {
      return _nvm;
 }
 
@@ -34,6 +34,7 @@ app_dag::app_dag(const char *filename) {
                     ++_nvm;
                }
           }
+          getline(f,s);
           _B = new int *[_ntasks];
           for (int i = 0; i < _ntasks; ++i) {
                _B[i] = new int[_ntasks];
@@ -43,6 +44,7 @@ app_dag::app_dag(const char *filename) {
                for (int j = 0; j < _ntasks; ++j) {
                     f >> _B[i][j];
                }
+               getline(f,s);
           }
           return;
      } else {
@@ -52,9 +54,41 @@ app_dag::app_dag(const char *filename) {
 }
 
 app_dag::~app_dag() {
-     delete[] _S;
      for (int i = 0; i < _ntasks; ++i) {
           delete[] _B[i];
      }
      delete[] _B;
+     delete[] _S;
+}
+
+void app_dag::find_path(int cur_vertex, vector<int>& curr) {
+     curr.push_back(cur_vertex);
+     if (cur_vertex == _ntasks-1 && curr[0] == 0) {
+          _paths.insert(curr);
+          curr.clear();
+          return;
+     }
+     for (int i = cur_vertex+1; i < _ntasks; ++i) {
+          if (_B[cur_vertex][i] > 0) {
+               find_path(i, curr);
+          }
+     }
+}
+
+void app_dag::gen_paths() {
+     for (int i = 1; i < _ntasks-1; ++i) {
+          vector<int> curr;
+          curr.push_back(0);
+          if (_B[0][i] > 0) {
+               find_path(i, curr);
+          }
+     }
+     set<vector<int> >::iterator it;
+     for (it = _paths.begin(); it != _paths.end(); ++it) {
+          vector<int> aux = *it;
+          for (unsigned j = 0; j < aux.size(); ++j) {
+               cout << aux[j] << ' ';
+          }
+          cout << endl;
+     }
 }
