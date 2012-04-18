@@ -13,7 +13,7 @@ private:
      int _nvm;    //Number of VMs.
      int *_S;     //Software demand of each tasks, denoted by the VM's id.
      int **_B;    //Number of bytes transmitted between tasks.
-     set<vector<int> > _paths;
+     vector<vector<int> > _paths;
 
      void find_path(int cur_vertex, vector<int>& curr);
 

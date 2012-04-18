@@ -64,7 +64,7 @@ app_dag::~app_dag() {
 void app_dag::find_path(int cur_vertex, vector<int>& curr) {
      curr.push_back(cur_vertex);
      if (cur_vertex == _ntasks-1 && curr[0] == 0) {
-          _paths.insert(curr);
+          _paths.push_back(curr);
           curr.clear();
           return;
      }
@@ -84,10 +84,9 @@ void app_dag::gen_paths() {
           }
      }
      set<vector<int> >::iterator it;
-     for (it = _paths.begin(); it != _paths.end(); ++it) {
-          vector<int> aux = *it;
-          for (unsigned j = 0; j < aux.size(); ++j) {
-               cout << aux[j] << ' ';
+     for (unsigned i = 0; i < _paths.size(); ++i) {
+          for (unsigned j = 0; j < _paths.size(); ++j) {
+               cout << _paths[i][j] << ' ';
           }
           cout << endl;
      }
