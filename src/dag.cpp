@@ -83,9 +83,8 @@ void app_dag::gen_paths() {
                find_path(i, curr);
           }
      }
-     set<vector<int> >::iterator it;
      for (unsigned i = 0; i < _paths.size(); ++i) {
-          for (unsigned j = 0; j < _paths.size(); ++j) {
+          for (unsigned j = 0; j < _paths[i].size(); ++j) {
                cout << _paths[i][j] << ' ';
           }
           cout << endl;
