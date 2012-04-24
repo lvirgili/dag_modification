@@ -8,6 +8,10 @@ int app_dag::nvm() const {
      return _nvm;
 }
 
+int app_dag::I(const int i) const {
+     return _I[i];
+}
+
 int app_dag::S(const int i) const {
      return _S[i];
 }
@@ -23,7 +27,11 @@ app_dag::app_dag(const char *filename) {
           getline(f, s, ':');
           f >> _ntasks;
           getline(f, s);
-          getline(f, s); // Throw away the I info.
+          getline(f, s, ')');
+          _I = new int[_ntasks];
+          for (int i = 0; i < _ntasks; ++i) {
+               f >> _I[i];
+          }
           getline(f, s, ')');
           set<int> aux;
           _nvm = 0;
@@ -59,6 +67,7 @@ app_dag::~app_dag() {
      }
      delete[] _B;
      delete[] _S;
+     delete[] _I;
 }
 
 void app_dag::find_path(int cur_vertex, vector<int>& curr) {
@@ -88,5 +97,18 @@ void app_dag::gen_paths() {
                cout << _paths[i][j] << ' ';
           }
           cout << endl;
+     }
+}
+
+void app_dag::gen_Phs() {
+     for (unsigned i = 0; i < _paths.size(); ++i) {
+          for (unsigned j = 0; j < _paths[i].size(); ++j) {
+               int vm = _S[_paths[i][j]];
+               if (_P.count(make_pair(i,vm)) == false) {
+                    vector<int> aux;
+                    _P.insert(make_pair(make_pair(i,vm),aux));
+               }
+               _P[make_pair(i,vm)].push_back(_paths[i][j]);
+          }
      }
 }

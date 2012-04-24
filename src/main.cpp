@@ -9,6 +9,12 @@ int main(int argc, char **argv) {
      app_dag G(argv[1]);
      cout << G.ntasks() << endl;
      cout << G.nvm() << endl;
+     cout << "I: ";
+     for (int i = 0; i < G.ntasks(); ++i) {
+          cout << G.I(i) << ' ';
+     }
+     cout << endl;
+     cout << "S: ";
      for (int i = 0; i < G.ntasks(); ++i) {
           cout << G.S(i) << ' ';
      }
