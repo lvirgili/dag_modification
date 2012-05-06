@@ -6,6 +6,7 @@
 #include <set>
 #include <vector>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 class app_dag {
@@ -23,6 +24,7 @@ private:
      void find_path(int cur_vertex, vector<int>& curr);
      void gen_Phs();
      int find_weight(map<pair<int,int>, vector<int> >::iterator it);
+     void remove_tasks(map<pair<int,int>, vector<int> >::iterator cur_it);
 
 public:
      int ntasks() const;

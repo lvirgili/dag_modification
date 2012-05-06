@@ -140,11 +140,44 @@ map<pair<int,int>, vector<int> >::iterator app_dag::find_heavy() {
      return max_it;
 }
 
+void app_dag::remove_tasks(map<pair<int,int>, vector<int> >::iterator cur_it) {
+     map<pair<int,int>, vector<int> >::iterator it;
+     vector<int> tasks(cur_it->second); //Tasks to be removed from the sets
+     for (it = _P.begin(); it != _P.end(); ++it) {
+          for (unsigned i = 0; i < tasks.size(); ++i) {
+               if (count(it->second.begin(), it->second.end(), tasks[i]) != 0) {
+                    it->second.erase(find(it->second.begin(), it->second.end(), tasks[i]));
+               }
+          }
+          if (it->second.empty() == true) { //Set became empty.
+               _P.erase(it);
+          }
+     }
+}
+
 void app_dag::dagmdf() {
      gen_Phs();
-     map<pair<int,int>, vector<int> >::iterator it = find_heavy();
-     for (unsigned i = 0; i < it->second.size(); ++i) {
-          cout << it->second[i] << ' ';
+     map<pair<int,int>, vector<int> >::iterator it;
+     cout << "+++++\n";
+     for (it = _P.begin(); it != _P.end(); it++) {
+          cout << it->first.first << ' ' << it->first.second << ": ";
+          vector<int> aux(it->second);
+          for (unsigned i = 0; i < aux.size(); ++i) {
+               cout << aux[i] << ' ';
+          }
+          cout << endl;
+     }
+     cout << "=======\n";
+     cout << "Heavy: ";
+     cout << find_heavy()->first.first << ' ' << find_heavy()->first.second << endl;
+     cout << endl;
+     remove_tasks(find_heavy());
+     for (it = _P.begin(); it != _P.end(); it++) {
+          cout << it->first.first << ' ' << it->first.second << ": ";
+          for (unsigned i = 0; i < it->second.size(); ++i) {
+               cout << it->second[i] << ' ';
+          }
+          cout << endl;
      }
      cout << endl;
 }
