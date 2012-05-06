@@ -20,6 +20,10 @@ int app_dag::B(const int i, const int j) const {
      return _B[i][j];
 }
 
+app_dag::app_dag() {
+     _ntasks = _nvm = 0;
+}
+
 app_dag::app_dag(const char *filename) {
      ifstream f(filename);
      if (f.is_open() == true) {
@@ -101,6 +105,7 @@ void app_dag::gen_paths() {
 }
 
 void app_dag::gen_Phs() {
+     gen_paths();
      for (unsigned i = 0; i < _paths.size(); ++i) {
           for (unsigned j = 0; j < _paths[i].size(); ++j) {
                int vm = _S[_paths[i][j]];
@@ -111,4 +116,35 @@ void app_dag::gen_Phs() {
                _P[make_pair(i,vm)].push_back(_paths[i][j]);
           }
      }
+}
+
+int app_dag::find_weight(map<pair<int,int>,vector<int> >::iterator it) {
+     int weight = 0;
+     vector<int> path(it->second);
+     for (unsigned i = 0; i < path.size()-1; ++i) {
+          weight += _B[path[i]][path[i+1]];
+     }
+     return weight;
+}
+
+map<pair<int,int>, vector<int> >::iterator app_dag::find_heavy() {
+     map<pair<int,int>, vector<int> >::iterator it, max_it;
+     int max = 0;
+     for (it = _P.begin(); it != _P.end(); ++it) {
+          int cur_weight = find_weight(it);
+          if (cur_weight > max) {
+               max_it = it;
+               max = cur_weight;
+          }
+     }
+     return max_it;
+}
+
+void app_dag::dagmdf() {
+     gen_Phs();
+     map<pair<int,int>, vector<int> >::iterator it = find_heavy();
+     for (unsigned i = 0; i < it->second.size(); ++i) {
+          cout << it->second[i] << ' ';
+     }
+     cout << endl;
 }

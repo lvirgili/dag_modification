@@ -26,7 +26,7 @@ int main(int argc, char **argv) {
           cout << endl;
      }
      cout << "======\n";
-     G.gen_paths();
+     G.dagmdf();
 
      return 0;
 }

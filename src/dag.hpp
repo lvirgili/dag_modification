@@ -18,8 +18,11 @@ private:
      vector<vector<int> > _paths;
      map<pair<int,int>, vector<int> > _P;
 
+     map<pair<int,int>, vector<int> >::iterator find_heavy();
+     void gen_paths();
      void find_path(int cur_vertex, vector<int>& curr);
      void gen_Phs();
+     int find_weight(map<pair<int,int>, vector<int> >::iterator it);
 
 public:
      int ntasks() const;
@@ -27,9 +30,10 @@ public:
      int I(const int) const;
      int S(const int) const;
      int B(const int, const int) const;
+     app_dag();
      app_dag(const char *);
      ~app_dag();
-     void gen_paths();
+     void dagmdf();
 };
 
 #endif
