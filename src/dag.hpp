@@ -7,15 +7,16 @@
 #include <vector>
 #include <map>
 #include <algorithm>
+#include "vm_info.hpp"
 using namespace std;
 
 class app_dag {
 private:
-     int _ntasks; //Number of tasks.
-     int _nvm;    //Number of VMs.
-     int *_I;     //Weight of each task.
-     int *_S;     //Software demand of each tasks, denoted by the VM's id.
-     int **_B;    //Number of bytes transmitted between tasks.
+     int _ntasks;               //Number of tasks.
+     int _nvm;                  //Number of VMs.
+     int *_I;                   //Weight of each task.
+     int *_S;                   //Software demand of each tasks, denoted by the VM's id.
+     int **_B;                  //Number of bytes transmitted between tasks.
      vector<vector<int> > _paths;
      map<pair<int,int>, vector<int> > _P;
 
@@ -25,16 +26,18 @@ private:
      void gen_Phs();
      int find_weight(map<pair<int,int>, vector<int> >::iterator it);
      void remove_tasks(map<pair<int,int>, vector<int> >::iterator cur_it);
+     void printDAG(const char *, int, vector<vector<int> >, vector<int>, vector<int>);
 
 public:
+     vm_info *vinfo;
      int ntasks() const;
      int nvm() const;
      int I(const int) const;
      int S(const int) const;
      int B(const int, const int) const;
-     app_dag();
-     app_dag(const char *);
+     app_dag(const char *, const char *);
      ~app_dag();
+     void dagmdf(const char *);
      void dagmdf();
 };
 

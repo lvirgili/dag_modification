@@ -2,7 +2,7 @@ CC = g++
 FLAGS = -std=c++0x -Wall -Wfatal-errors
 LMATH = -lm
 
-OBJS = dag.o main.o
+OBJS = vm_info.o dag.o main.o
 TARG = dagmdf
 
 dagmdf: $(OBJS)

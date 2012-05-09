@@ -20,11 +20,8 @@ int app_dag::B(const int i, const int j) const {
      return _B[i][j];
 }
 
-app_dag::app_dag() {
-     _ntasks = _nvm = 0;
-}
-
-app_dag::app_dag(const char *filename) {
+app_dag::app_dag(const char *filename, const char *vmfilename) {
+     vinfo = new vm_info(vmfilename);
      ifstream f(filename);
      if (f.is_open() == true) {
           string s;
@@ -58,9 +55,10 @@ app_dag::app_dag(const char *filename) {
                }
                getline(f,s);
           }
+          f.close();
           return;
      } else {
-          cout << "Erro na leitura do arquivo " << f << endl;
+          cout << "Erro na leitura do arquivo " << filename << endl;
           exit(-1);
      }
 }
@@ -72,6 +70,52 @@ app_dag::~app_dag() {
      delete[] _B;
      delete[] _S;
      delete[] _I;
+     delete vinfo;
+}
+
+void app_dag::printDAG(const char *filename, int ntasks, vector<vector<int> > B, vector<int> I, vector<int> S) {
+     ofstream f(filename);
+     if (f.is_open() == true) {
+          f << "n: " << ntasks << endl;
+          f << "I: [ (1) ";
+          for (unsigned i = 0; i < I.size(); ++i) {
+               f << I[i] << ' ';
+          }
+          f << "]" << endl;
+          f << "S: [ (1) ";
+          for (unsigned i = 0; i < S.size(); ++i) {
+               f << S[i] << ' ';
+          }
+          f << "]" << endl;
+          f << "B: [ ";
+          for (unsigned i = 0; i < B.size(); ++i) {
+               if (i != 0) f << "     ";
+               f << "(" << i+1 << " 1) ";
+               for (unsigned j = 0; j < B[i].size(); ++j) {
+                    f << B[i][j] << ' ';
+               }
+               f << endl;
+          }
+          f << "   ]" << endl;
+          f << "D: [ ";
+          for (unsigned i = 0; i < B.size(); ++i) {
+               if (i != 0) f << "     ";
+               f << "(" << i+1 << " 1) ";
+               for (unsigned j = 0; j < B[i].size(); ++j) {
+                    if (B[i][j] != 0) {
+                         f << 1 << ' ';
+                    } else {
+                         f << 0 << ' ';
+                    }
+               }
+               f << endl;
+          }
+          f << "   ]" << endl;
+          f.close();
+     } else {
+          cout << "Error opening the file " << filename << " to write the MDAG.\n";
+          exit(-1);
+     }
 }
 
 void app_dag::find_path(int cur_vertex, vector<int>& curr) {
@@ -121,8 +165,12 @@ void app_dag::gen_Phs() {
 int app_dag::find_weight(map<pair<int,int>,vector<int> >::iterator it) {
      int weight = 0;
      vector<int> path(it->second);
-     for (unsigned i = 0; i < path.size()-1; ++i) {
-          weight += _B[path[i]][path[i+1]];
+     if (path.size() > 1) {
+          for (unsigned i = 0; i < path.size()-1; ++i) {
+               weight += _B[path[i]][path[i+1]];
+          }
+     } else {
+          weight = 1; //Just one task, return a small number as there is no "path".
      }
      return weight;
 }
@@ -155,29 +203,70 @@ void app_dag::remove_tasks(map<pair<int,int>, vector<int> >::iterator cur_it) {
      }
 }
 
-void app_dag::dagmdf() {
-     gen_Phs();
+void app_dag::dagmdf(const char *outfile) {
+     gen_Phs(); // Creates the set P_{h,s}
      map<pair<int,int>, vector<int> >::iterator it;
-     cout << "+++++\n";
-     for (it = _P.begin(); it != _P.end(); it++) {
-          cout << it->first.first << ' ' << it->first.second << ": ";
-          vector<int> aux(it->second);
-          for (unsigned i = 0; i < aux.size(); ++i) {
-               cout << aux[i] << ' ';
+     vector<int> newS, newI;
+     vector<vector<int> > newB;
+     int vms_added = 0;
+     newS.push_back(0); newI.push_back(0); // The repository.
+     vector<int> repo(1,0); newB.push_back(repo);
+     while (_P.empty() == false) {
+          map<pair<int,int>, vector<int> >::iterator heavy = find_heavy();
+          cout << "Heavy: ";
+          cout << heavy->first.first << ' ' << heavy->first.second << endl;
+          for (unsigned i = 0; i < heavy->second.size(); ++i) {
+               cout << heavy->second[i] << ' ';
+          }
+          cout << endl << endl;
+          ++vms_added;
+          newS.push_back(0);
+          newI.push_back(vinfo->TV(heavy->first.second - 1));
+          newB[0].push_back(vinfo->BV(heavy->first.second - 1));
+          vector<int> vm(_ntasks, 0); newB.push_back(vm);
+          for (unsigned i = 0; i < heavy->second.size(); ++i) {
+               newB[vms_added][heavy->second[i]] = 0x7FFFFFFF; // Adds an arc from the vm to the task i with weight infinite.
+          }
+          remove_tasks(heavy);
+     }
+     for (int i = 0; i < _ntasks; ++i) {
+          newB[0].push_back(0);
+          newI.push_back(_I[i]);
+          newS.push_back(_S[i]);
+     }
+     for (unsigned i = 1; i < newB.size(); i++) {
+          vector<int> aux(vms_added+1, 0);
+          newB[i].insert(newB[i].begin(), aux.begin(), aux.end());
+     }
+     for (int i = 0; i < _ntasks; ++i) {
+          vector<int> task(vms_added+1, 0);
+          for (int j = 0; j < _ntasks; ++j) {
+               task.push_back(_B[i][j]);
+          }
+          newB.push_back(task);
+     }
+     int new_ntasks = _ntasks + vms_added + 1;
+     cout << "New DAG:\n";
+     cout << "n: " << new_ntasks << endl;
+     for (unsigned i = 0; i < newB.size(); ++i) {
+          for (unsigned j = 0; j < newB[i].size(); ++j) {
+               cout << newB[i][j] << ' ';
           }
           cout << endl;
      }
-     cout << "=======\n";
-     cout << "Heavy: ";
-     cout << find_heavy()->first.first << ' ' << find_heavy()->first.second << endl;
-     cout << endl;
-     remove_tasks(find_heavy());
-     for (it = _P.begin(); it != _P.end(); it++) {
-          cout << it->first.first << ' ' << it->first.second << ": ";
-          for (unsigned i = 0; i < it->second.size(); ++i) {
-               cout << it->second[i] << ' ';
-          }
-          cout << endl;
+     cout << "New I:\n";
+     for (unsigned i = 0; i < newI.size(); ++i) {
+          cout << newI[i] << ' ';
      }
      cout << endl;
+     cout << "New S:\n";
+     for (unsigned i = 0; i < newS.size(); ++i) {
+          cout << newS[i] << ' ';
+     }
+     cout << endl;
+     printDAG(outfile, new_ntasks, newB, newI, newS);
+}
+
+void app_dag::dagmdf() {
+     dagmdf("/tmp/mdf_dag.txt");
 }
