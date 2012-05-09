@@ -140,12 +140,6 @@ void app_dag::gen_paths() {
                find_path(i, curr);
           }
      }
-     for (unsigned i = 0; i < _paths.size(); ++i) {
-          for (unsigned j = 0; j < _paths[i].size(); ++j) {
-               cout << _paths[i][j] << ' ';
-          }
-          cout << endl;
-     }
 }
 
 void app_dag::gen_Phs() {
@@ -213,12 +207,6 @@ void app_dag::dagmdf(const char *outfile) {
      vector<int> repo(1,0); newB.push_back(repo);
      while (_P.empty() == false) {
           map<pair<int,int>, vector<int> >::iterator heavy = find_heavy();
-          cout << "Heavy: ";
-          cout << heavy->first.first << ' ' << heavy->first.second << endl;
-          for (unsigned i = 0; i < heavy->second.size(); ++i) {
-               cout << heavy->second[i] << ' ';
-          }
-          cout << endl << endl;
           ++vms_added;
           newS.push_back(0);
           newI.push_back(vinfo->TV(heavy->first.second - 1));
@@ -246,24 +234,6 @@ void app_dag::dagmdf(const char *outfile) {
           newB.push_back(task);
      }
      int new_ntasks = _ntasks + vms_added + 1;
-     cout << "New DAG:\n";
-     cout << "n: " << new_ntasks << endl;
-     for (unsigned i = 0; i < newB.size(); ++i) {
-          for (unsigned j = 0; j < newB[i].size(); ++j) {
-               cout << newB[i][j] << ' ';
-          }
-          cout << endl;
-     }
-     cout << "New I:\n";
-     for (unsigned i = 0; i < newI.size(); ++i) {
-          cout << newI[i] << ' ';
-     }
-     cout << endl;
-     cout << "New S:\n";
-     for (unsigned i = 0; i < newS.size(); ++i) {
-          cout << newS[i] << ' ';
-     }
-     cout << endl;
      printDAG(outfile, new_ntasks, newB, newI, newS);
 }
 
