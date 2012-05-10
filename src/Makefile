@@ -1,5 +1,5 @@
 CC = g++
-FLAGS = -std=c++0x -Wall -Wfatal-errors
+FLAGS = -Wall -O3 -std=c++0x
 LMATH = -lm
 
 OBJS = vm_info.o dag.o main.o
