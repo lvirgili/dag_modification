@@ -14,8 +14,9 @@ private:
      double *_TV;               //Size of the VM.
 
 public:
-     vm_info(const char *);
+     vm_info(const char *);     //Constructor, receives the file that has the VM's info.
      ~vm_info();
+     //Getters.
      int numvms() const;
      int SV(const int) const;
      double BV(const int) const;

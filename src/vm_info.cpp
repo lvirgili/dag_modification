@@ -23,7 +23,7 @@ vm_info::vm_info(const char *filename) {
                f >> _TV[i];
           }
      } else {
-          cout << "Erro na leitura do arquivo " << filename << endl;
+          cout << "[VM] Error reading the file " << filename << endl;
           exit(-1);
      }
 }

@@ -30,11 +30,6 @@ private:
      void printDAG(const char *, int, vector<vector<int> >, vector<int>, vector<int>);
 
 public:
-     int ntasks() const;
-     int nvm() const;
-     int I(const int) const;
-     int S(const int) const;
-     int B(const int, const int) const;
      app_dag(const char *, const char *);
      ~app_dag();
      void dagmdf(const char *);
