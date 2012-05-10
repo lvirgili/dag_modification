@@ -19,6 +19,7 @@ private:
      int **_B;                  //Number of bytes transmitted between tasks.
      vector<vector<int> > _paths;
      map<pair<int,int>, vector<int> > _P;
+     vm_info *vinfo;
 
      map<pair<int,int>, vector<int> >::iterator find_heavy();
      void gen_paths();
@@ -29,7 +30,6 @@ private:
      void printDAG(const char *, int, vector<vector<int> >, vector<int>, vector<int>);
 
 public:
-     vm_info *vinfo;
      int ntasks() const;
      int nvm() const;
      int I(const int) const;
