@@ -8,7 +8,7 @@ A simple
 make
 ```
 
-will generate an executable called <pre>dagmdf<\pre>.
+will generate an executable called "dagmdf".
 
 Usage
 -----
