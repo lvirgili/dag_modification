@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+for i in `seq 3 13`
+do
+    #Generate a random dag
+    ../gridAppGen/genSimpleFull $i
+    #Modify its DAG
+    dag=./results/simple${i}_app.dat
+    ../src/dagmdf $dag ../src/vm_test.dat
+    #Create a dot of the modified DAG
+    dot=./results/simple${i}_app_mdf.dot
+    ../gridAppGen/app2dot /tmp/mdf_dag.dat > $dot
+    dir=simple${i}
+    mkdir -p $dir
+    cp results/simple${i}_app.dot $dir
+    cp results/simple${i}_app_mdf.dot $dir
+    cp results/simple${i}_app.dat $dir
+    cp /tmp/mdf_dag.dat $dir/simple${i}_app_mdf.dat
+done
+
+rm -rf results
