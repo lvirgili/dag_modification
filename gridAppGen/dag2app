@@ -2,17 +2,17 @@
 ################################################################################
 # Description: Creates a TVM Scheduler compatible application input file
 #              based on a graph (DAG).
-#  
+#
 # Execution Example: ./dag2app wien2k_6.dag 45 53 10 4 5 > wien2k_6.dat
 #
 #  Autor: Cesar G. Chaves A. <cesarchaves1@gmail.com>
 #  Data:  07/07/2010
-################################################################################ 
+################################################################################
 
 if [ $# != 6 ]; then
     echo "Usage: $0 DAG_FILE MIN_I MAX_I MV_AMOUNT MIN_B MAX_B"
     exit
-fi 
+fi
 
 dagFile=$1
 minI=$2
@@ -31,14 +31,14 @@ echo "n: $n" > $tmpFile
 
 # Generates the amount of instructions that will be executed for each task
 echo -n "I: [ (1)" >> $tmpFile
-for (( i = 0 ; i < ${n}; i++ )); do 
+for (( i = 0 ; i < ${n}; i++ )); do
     echo -n "" $(echo "$RANDOM%($maxI-$minI)+$minI+1" | bc) >> $tmpFile
 done
 echo "]" >> $tmpFile
 
 # Generates the virtual machine dependences
 echo -n "S: [ (1)" >> $tmpFile
-for (( i = 0 ; i < $n; i++ )); do 
+for (( i = 0 ; i < $n; i++ )); do
     echo -n "" $(echo "$RANDOM%$o+1" | bc) >> $tmpFile
 done
 echo "]" >> $tmpFile
@@ -55,15 +55,15 @@ echo -e "" $(gawk '\
         if(row>0) {
             printf "\\n";
             print "____"
-        }    
+        }
         print "(" ++row, "1)"
-        
+
         for(i=1; i<=NF; i++)
             if(int($i)==1)
                 print(" ", int(rand()*(1+MAX-MIN)+MIN));
             else
                 print(" ", $i);
-        
+
     }
     END {
     }\
@@ -78,7 +78,7 @@ echo -e "" $(gawk '\
         if(row>0) {
             printf "\\n";
             print "____"
-        }    
+        }
         print "(" ++row, "1)"
         print
     }
