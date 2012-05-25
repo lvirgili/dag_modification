@@ -5,6 +5,7 @@ do
     #Generate a random dag
     ../gridAppGen/genSimpleFull $i
     #Modify its DAG
+    echo "Generating DAG with ${i} vertices"
     dag=./results/simple${i}_app.dat
     ../src/dagmdf $dag ../src/vm_test.dat
     #Create a dot of the modified DAG
