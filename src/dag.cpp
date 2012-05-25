@@ -238,6 +238,33 @@ void app_dag::dagmdf(const char *outfile) {
           newB.push_back(task);
      }
      int new_ntasks = _ntasks + vms_added + 1; //This is needed, or the destructor for the app_dag seg faults.
+
+     //Some tests to see if the generated DAG is within reason.
+     if (new_ntasks < (_ntasks+1)) {
+          //This one checks if there is at least the repository was added.
+          cout << "[ASSERTIONS] DAG has too few added vertices." << endl;
+     }
+     if (new_ntasks > (1 + 2*_ntasks)) {
+          //This one checks if more than _ntasks VMs were added, which
+          //is more than the maximum (one for each VM).
+          cout << "[ASSERTIONS] DAG has too many added vertices." << endl;
+     }
+     set<int> reached;
+     pair<set<int>::iterator, bool> p;
+     for (int i = 1; i <= vms_added; ++i) {
+          for (unsigned task = 0; task < newB[i].size(); ++task) {
+               if (newB[i][task] != 0) {
+                    p = reached.insert(task);
+                    if (p.second == false) {
+                         cout << "[ASSERTIONS] Task " << task << " has more than one VM." << endl;
+                    }
+               }
+          }
+     }
+     if (reached.size() != (unsigned)_ntasks) {
+          cout << "[ASSERTIONS] There is a task that has no adjacent VM." << endl;
+     }
+
      //Prints the modfied DAG to "outfile."
      printDAG(outfile, new_ntasks, newB, newI, newS);
 }
