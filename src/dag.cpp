@@ -149,13 +149,9 @@ void app_dag::gen_Phs() {
 //thery is only one vertex in the set, it returns 1.
 int app_dag::find_weight(map<pair<int,int>,vector<int> >::iterator it) {
      int weight = 0;
-     vector<int> path(it->second);
-     if (path.size() > 1) {
-          for (unsigned i = 0; i < path.size()-1; ++i) {
-               weight += _B[path[i]][path[i+1]];
-          }
-     } else {
-          weight = 1; //Just one task, return a small number as there is no "path".
+     vector<int> path(_paths[it->first.first]);
+     for (unsigned i = 0; i < path.size()-1; ++i) {
+          weight += _B[path[i]][path[i+1]];
      }
      return weight;
 }
@@ -180,12 +176,18 @@ void app_dag::remove_tasks(map<pair<int,int>, vector<int> >::iterator cur_it) {
      map<pair<int,int>, vector<int> >::iterator it;
      vector<int> tasks(cur_it->second); //Tasks to be removed from the sets
      for (it = _P.begin(); it != _P.end(); ++it) {
+          if (it == cur_it) {
+               continue;
+          }
           for (unsigned i = 0; i < tasks.size(); ++i) {
-               if (count(it->second.begin(), it->second.end(), tasks[i]) != 0) {
+               if ((int)count(it->second.begin(), it->second.end(), tasks[i]) != 0) {
                     it->second.erase(find(it->second.begin(), it->second.end(), tasks[i]));
                }
           }
-          if (it->second.empty() == true) { //Set became empty.
+     }
+     _P.erase(cur_it);
+     for (it = _P.begin(); it != _P.end(); ++it) {
+          if (it->second.empty() == true) {
                _P.erase(it);
           }
      }
@@ -249,6 +251,7 @@ void app_dag::dagmdf(const char *outfile) {
           //is more than the maximum (one for each VM).
           cout << "[ASSERTIONS] DAG has too many added vertices." << endl;
      }
+     //These next lines check to see if each task has its own VM.
      set<int> reached;
      pair<set<int>::iterator, bool> p;
      for (int i = 1; i <= vms_added; ++i) {
