@@ -242,7 +242,7 @@ void app_dag::dagmdf(const char *outfile) {
      int new_ntasks = _ntasks + vms_added + 1; //This is needed, or the destructor for the app_dag seg faults.
 
      //Some tests to see if the generated DAG is within reason.
-     if (new_ntasks < (_ntasks+1)) {
+     if (new_ntasks < (_ntasks + _paths.size())) {
           //This one checks if there is at least the repository was added.
           cout << "[ASSERTIONS] DAG has too few added vertices." << endl;
      }
