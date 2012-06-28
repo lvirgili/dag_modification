@@ -14,9 +14,9 @@ int main(int argc, char **argv) {
      //If an exit file was supplied in argv[3], pass it as an
      //argument. Else, use the default file, "/tmp/mdf_dag.dat".
      if (argc == 4) {
-          G.dagmdf_path(argv[3]);
+          G.dagmdf_oneeach(argv[3]);
      } else {
-          G.dagmdf_path();
+          G.dagmdf_oneeach();
      }
      return 0;
 }

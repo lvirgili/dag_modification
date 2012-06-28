@@ -194,7 +194,7 @@ void app_dag::remove_tasks(map<pair<int,int>, vector<int> >::iterator cur_it) {
 }
 
 //The function that does the "work".
-void app_dag::dagmdf(const char *outfile) {
+void app_dag::dagmdf_path(const char *outfile) {
      gen_Phs(); // Creates the set P_{h,s}
      map<pair<int,int>, vector<int> >::iterator it;
      vector<int> newS, newI; //These will be the new I and S arrays.
@@ -252,26 +252,70 @@ void app_dag::dagmdf(const char *outfile) {
           cout << "[ASSERTIONS] DAG has too many added vertices." << endl;
      }
      //These next lines check to see if each task has its own VM.
-     set<int> reached;
-     pair<set<int>::iterator, bool> p;
-     for (int i = 1; i <= vms_added; ++i) {
-          for (unsigned task = 0; task < newB[i].size(); ++task) {
-               if (newB[i][task] != 0) {
-                    p = reached.insert(task);
-                    if (p.second == false) {
-                         cout << "[ASSERTIONS] Task " << task << " has more than one VM." << endl;
-                    }
-               }
-          }
-     }
-     if (reached.size() != (unsigned)_ntasks) {
-          cout << "[ASSERTIONS] There is a task that has no adjacent VM." << endl;
-     }
+     // set<int> reached;
+     // pair<set<int>::iterator, bool> p;
+     // for (int i = 1; i <= vms_added; ++i) {
+     //      for (unsigned task = 0; task < newB[i].size(); ++task) {
+     //           if (newB[i][task] != 0) {
+     //                p = reached.insert(task);
+     //                cout << task << endl;
+     //                if (p.second == false) {
+     //                     cout << "[ASSERTIONS] Task " << task << " has more than one VM." << endl;
+     //                }
+     //           }
+     //      }
+     // }
+     // if (reached.size() != (unsigned)_ntasks) {
+     //      cout << "[ASSERTIONS] There is a task that has no adjacent VM." << endl;
+     //      cout << reached.size() << ' ' << _ntasks << endl;
+     // }
 
      //Prints the modfied DAG to "outfile."
      printDAG(outfile, new_ntasks, newB, newI, newS);
 }
 
-void app_dag::dagmdf() {
-     dagmdf("/tmp/mdf_dag.dat");
+void app_dag::dagmdf_path() {
+     dagmdf_path("/tmp/mdf_dag.dat");
+}
+
+void app_dag::dagmdf_oneeach(const char *outfile) {
+     vector<int> newS, newI; //These will be the new I and S arrays.
+     vector<vector<int> > newB; //This will be the new B matrix.
+
+     //Creates the vertex for the repository.
+     newS.push_back(0); newI.push_back(0);
+     vector<int> repo(1,0); newB.push_back(repo);
+
+     for (int i = 0; i < _ntasks; ++i) {
+          newS.push_back(0);
+          newI.push_back(vinfo->TV(_S[i] - 1));
+          newB[0].push_back(vinfo->BV(_S[i] - 1));
+          vector<int> vm(2 * _ntasks + 1, 0);
+          vm[i + _ntasks + 1] = 0x7FFFFFFF;
+          newB.push_back(vm);
+     }
+
+     //Appends the tasks info to the added data for printing.
+     for (int i = 0; i < _ntasks; ++i) {
+          newB[0].push_back(0);
+          newI.push_back(_I[i]);
+          newS.push_back(_S[i]);
+     }
+
+     for (int i = 0; i < _ntasks; ++i) {
+          vector<int> task(2 * _ntasks + 1, 0);
+          for (int j = 0; j < _ntasks; ++j) {
+               task[j + _ntasks + 1] = (_B[i][j]);
+          }
+          newB.push_back(task);
+     }
+
+     int new_ntasks = 2 * _ntasks + 1;
+
+     printDAG(outfile, new_ntasks, newB, newI, newS);
+
+}
+
+void app_dag::dagmdf_oneeach() {
+     dagmdf_oneeach("/tmp/mdf_dag.dat");
 }

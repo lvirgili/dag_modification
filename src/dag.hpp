@@ -32,8 +32,10 @@ private:
 public:
      app_dag(const char *, const char *);
      ~app_dag();
-     void dagmdf(const char *);
-     void dagmdf();
+     void dagmdf_path(const char *);
+     void dagmdf_path();
+     void dagmdf_oneeach(const char *);
+     void dagmdf_oneeach();
 };
 
 #endif
