@@ -78,13 +78,13 @@ To obtain the modification presented in the paper:
 That has ![this output][path_mdf].
 
 [sample]:
-https://github.com/lvirgili/dag_modification/tree/raw/master/src/examples/sample.jpeg
+https://github.com/lvirgili/dag_modification/raw/master/src/examples/sample.jpeg
 "Sample DAG"
 
-[oneeach_mdf]: https://github.com/lvirgili/dag_modification/tree/raw/master/src/examples/one_each_mdf.jpeg "DAG modified with one VM to
+[oneeach_mdf]: https://github.com/lvirgili/dag_modification/raw/master/src/examples/one_each_mdf.jpeg "DAG modified with one VM to
 each task"
 
-[onlyone_mdf]: https://github.com/lvirgili/dag_modification/tree/raw/master/src/examples/onlyone_mdf.jpeg "DAG modified with only one
+[onlyone_mdf]: https://github.com/lvirgili/dag_modification/raw/master/src/examples/onlyone_mdf.jpeg "DAG modified with only one
 instance of each VM"
 
-[path_mdf]: https://github.com/lvirgili/dag_modification/tree/raw/master/src/examples/path_mdf.jpeg "DAG with the path dependent modification"
+[path_mdf]: https://github.com/lvirgili/dag_modification/raw/master/src/examples/path_mdf.jpeg "DAG with the path dependent modification"
