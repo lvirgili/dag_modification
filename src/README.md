@@ -48,7 +48,7 @@ used is "/tmp/mdf_dag.dat".
 Examples
 --------
 In these examples, this sample graph will be modified.
-![][https://github.com/lvirgili/dag_modification/raw/master/src/examples/sample.jpeg]
+![Sample DAG][sample]
 
 * Adding one VM to each task
 The command to modify the graph with this algorithm is:
@@ -60,7 +60,7 @@ The command to modify the graph with this algorithm is:
 This will print the modified DAG in the default exit file,
 "/tmp/mdf_dag.txt".
 
-![][https://github.com/lvirgili/dag_modification/raw/master/src/examples/one_each_mdf.jpeg]
+![Output: one VM for each task][oneeach]
 
 * One instance of each VM
 The command for this modification has the same parameters, except that
@@ -70,7 +70,7 @@ it receives the third one, the output file.
 ./only_one sample.dat vm_sample.dat output.dat
 ```
 
-![][https://github.com/lvirgili/dag_modification/raw/master/src/examples/onlyone_mdf.jpeg].
+![One instance of each VM][onein]
 
 * Path modification
 To obtain the modification presented in the paper:
@@ -78,4 +78,20 @@ To obtain the modification presented in the paper:
 ./path_mdf sample.dat vm_sample.dat output.dat
 ```
 
-![][https://github.com/lvirgili/dag_modification/raw/master/src/examples/path_mdf.jpeg].
+![Path dependent modification][path]
+
+[sample]:
+https://github.com/lvirgili/dag_modification/raw/master/src/examples/sample.jpeg
+"Sample DAG"
+
+[oneeach]:
+https://github.com/lvirgili/dag_modification/raw/master/src/examples/one_each_mdf.jpeg
+"One VM for each task"
+
+[onein]:
+https://github.com/lvirgili/dag_modification/raw/master/src/examples/onlyone_mdf.jpeg
+"One instance of each VM"
+
+[path]:
+https://github.com/lvirgili/dag_modification/raw/master/src/examples/path_mdf.jpeg
+"Same VM for tasks in the same path"
