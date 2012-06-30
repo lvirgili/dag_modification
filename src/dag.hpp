@@ -20,6 +20,7 @@ private:
      vector<vector<int> > _paths;
      map<pair<int,int>, vector<int> > _P;
      vm_info *vinfo;
+     int _max_vm;               //The max id of the VMs.
 
      map<pair<int,int>, vector<int> >::iterator find_heavy();
      void gen_paths();
@@ -36,6 +37,8 @@ public:
      void dagmdf_path();
      void dagmdf_oneeach(const char *);
      void dagmdf_oneeach();
+     void dagmdf_onlyone(const char *);
+     void dagmdf_onlyone();
 };
 
 #endif
