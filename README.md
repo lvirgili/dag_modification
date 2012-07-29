@@ -12,7 +12,7 @@ Compiling
 ---------
 * One VM to each task
 This one is compiled by issuing
-```bash
+```sh
 make one_each
 ```
 
@@ -20,7 +20,7 @@ that generates an executable called "one_each".
 
 * One VM instance
 This one is compiled by issuing
-```bash
+```sh
 make only_one
 ```
 
@@ -28,7 +28,7 @@ that generates an executable called "only_one".
 
 * Path based modification
 This one is compiled by issuing
-```bash
+```sh
 make path_mdf
 ```
 
