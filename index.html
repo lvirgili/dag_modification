@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>DAG Modification Routines by lvirgili</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>DAG Modification Routines</h1>
+        <p></p>
+
+        <p class="view"><a href="https://github.com/lvirgili/dag_modification">View the Project on GitHub <small>lvirgili/dag_modification</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/lvirgili/dag_modification/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/lvirgili/dag_modification/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/lvirgili/dag_modification">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="embedding-software-requirements-in-grid-scheduling" class="anchor" href="#embedding-software-requirements-in-grid-scheduling"><span class="octicon octicon-link"></span></a>Embedding Software Requirements in Grid Scheduling</h1>
+
+<p>There are three ways to embed the software requirements in the
+application digraph (DAG) so far:
+1. Adding one virtual machine (VM) to each task of the DAG;
+2. Instantiating each needed VM once and all tasks are dependent on
+this instance; and
+3. Using the algorithm proposed <a href="http://ieeexplore.ieee.org/xpl/articleDetails.jsp?reload=true&amp;arnumber=5962664&amp;contentType=Conference+Publications">here</a>.</p>
+
+<h2>
+<a name="compiling" class="anchor" href="#compiling"><span class="octicon octicon-link"></span></a>Compiling</h2>
+
+<ul>
+<li>One VM to each task
+This one is compiled by issuing
+<code>sh
+make one_each
+</code>
+</li>
+</ul><p>that generates an executable called "one_each".</p>
+
+<ul>
+<li>One VM instance
+This one is compiled by issuing
+<code>sh
+make only_one
+</code>
+</li>
+</ul><p>that generates an executable called "only_one".</p>
+
+<ul>
+<li>Path based modification
+This one is compiled by issuing
+<code>sh
+make path_mdf
+</code>
+</li>
+</ul><p>that generates an executable called "path_mdf".</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>All the executables are executed with at least the same 2 parameters:</p>
+
+<ol>
+<li> The path to a file containing an application DAG information;</li>
+<li> The path to a file containing the information of the virtual machines.</li>
+</ol><p>Also, a third argument, which is optional, is the path for the file in
+which the modified graph will be printed. If not provided, the file
+used is "/tmp/mdf_dag.dat".</p>
+
+<h2>
+<a name="examples" class="anchor" href="#examples"><span class="octicon octicon-link"></span></a>Examples</h2>
+
+<p>In these examples, this sample graph will be modified.
+<img src="https://github.com/lvirgili/dag_modification/raw/master/src/examples/sample.jpeg" alt="Sample DAG" title="Sample DAG"></p>
+
+<ul>
+<li>Adding one VM to each task
+The command to modify the graph with this algorithm is:</li>
+</ul><div class="highlight"><pre>./one_each sample.dat vm_sample.dat
+</pre></div>
+
+<p>This will print the modified DAG in the default exit file,
+"/tmp/mdf_dag.txt".</p>
+
+<p><img src="https://github.com/lvirgili/dag_modification/raw/master/src/examples/one_each_mdf.jpeg" alt="Output: one VM for each task" title="One VM for each task"></p>
+
+<ul>
+<li>One instance of each VM
+The command for this modification has the same parameters, except that
+it receives the third one, the output file.</li>
+</ul><div class="highlight"><pre>./only_one sample.dat vm_sample.dat output.dat
+</pre></div>
+
+<p><img src="https://github.com/lvirgili/dag_modification/raw/master/src/examples/onlyone_mdf.jpeg" alt="One instance of each VM" title="One instance of each VM"></p>
+
+<ul>
+<li>Path modification
+To obtain the modification presented in the paper:
+<code>bash
+./path_mdf sample.dat vm_sample.dat output.dat
+</code>
+</li>
+</ul><p><img src="https://github.com/lvirgili/dag_modification/raw/master/src/examples/path_mdf.jpeg" alt="Path dependent modification" title="Same VM for tasks in the same path"></p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/lvirgili">lvirgili</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
